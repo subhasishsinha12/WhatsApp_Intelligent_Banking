@@ -135,6 +135,11 @@ const detectRiskKeywords = (message) => {
     'fraud', 'scam', 'hacked', 'unauthorized', 'unknown transaction',
     'stolen', 'phishing', 'suspicious', 'not me', 'did not do this',
     'block immediately', 'someone else', 'compromised',
+    'share otp', 'share my otp', 'share pin', 'share password',
+    'otp and pin', 'give otp', 'send otp', 'asked for otp',
+    'asked me to share', 'asking for pin', 'asking for otp',
+    'deducted without', 'transaction i did not', 'money missing',
+    'account emptied', 'unknown debit', 'fake call', 'impersonating',
   ];
 
   const lower = message.toLowerCase();
