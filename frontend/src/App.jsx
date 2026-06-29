@@ -9,6 +9,7 @@ import TicketsPage from './pages/TicketsPage';
 import AnalyticsPage from './pages/AnalyticsPage';
 import AdminPage from './pages/AdminPage';
 import CustomersPage from './pages/CustomersPage';
+import LiveMonitorPage from './pages/LiveMonitorPage';
 
 const ProtectedRoute = ({ children }) => {
   const { state } = useApp();
@@ -29,6 +30,7 @@ const AppRoutes = () => {
         <Route path="tickets" element={<TicketsPage />} />
         <Route path="customers" element={<CustomersPage />} />
         <Route path="analytics" element={<AnalyticsPage />} />
+        <Route path="monitor" element={<LiveMonitorPage />} />
         <Route path="admin" element={<AdminPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/chat" replace />} />

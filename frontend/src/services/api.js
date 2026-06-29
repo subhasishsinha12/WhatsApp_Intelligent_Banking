@@ -100,6 +100,8 @@ export const analyticsAPI = {
   getLeads: () => api.get('/analytics/leads'),
   getConversations: () => api.get('/analytics/conversations'),
   getCampaigns: () => api.get('/analytics/campaigns'),
+  getLive: () => api.get('/analytics/conversations/live'),
+  getFunnel: () => api.get('/analytics/funnel'),
 };
 
 export default api;

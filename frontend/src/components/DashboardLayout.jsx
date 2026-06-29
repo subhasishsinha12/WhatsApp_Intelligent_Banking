@@ -12,6 +12,7 @@ const navItems = [
   { path: '/tickets', icon: Ticket, label: 'Tickets' },
   { path: '/customers', icon: UserCheck, label: 'Customers' },
   { path: '/analytics', icon: BarChart3, label: 'Analytics' },
+  { path: '/monitor', icon: MessageSquare, label: 'Live Monitor' },
   { path: '/admin', icon: Settings, label: 'Admin' },
 ];
 

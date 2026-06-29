@@ -134,4 +134,48 @@ router.get('/campaigns', authMiddleware, async (req, res) => {
   }
 });
 
+// GET /api/analytics/conversations/live — active sessions count + recent messages
+router.get('/conversations/live', authMiddleware, async (req, res) => {
+  try {
+    const sessions = SessionModel.findAll();
+    const active = sessions.filter(s => {
+      const last = new Date(s.last_activity);
+      return (Date.now() - last.getTime()) < 30 * 60 * 1000; // 30 min
+    });
+    res.json({
+      success: true,
+      active_sessions: active.length,
+      total_sessions: sessions.length,
+      sessions: active.slice(0, 10).map(s => ({
+        id: s.id,
+        mobile: s.mobile ? s.mobile.replace(/(\d{2})\d{6}(\d{2})/, '$1XXXXXX$2') : 'Unknown',
+        state: s.state,
+        language: s.language,
+        last_activity: s.last_activity
+      }))
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// GET /api/analytics/funnel — conversation drop-off funnel
+router.get('/funnel', authMiddleware, async (req, res) => {
+  try {
+    const sessions = SessionModel.findAll();
+    const funnel = {
+      started: sessions.length,
+      language_selected: sessions.filter(s => s.language && s.language !== 'en').length + sessions.filter(s => s.state !== 'WELCOME' && s.state !== 'LANGUAGE_SELECTION').length,
+      authenticated: sessions.filter(s => s.context && s.context.authenticated).length,
+      reached_menu: sessions.filter(s => ['MAIN_MENU','ACCOUNT_SERVICES','LOANS_MENU','DEPOSITS_MENU'].includes(s.state) || (s.context && s.context.authenticated)).length,
+      completed_action: sessions.filter(s => s.context && (s.context.last_action || s.context.ticket_created || s.context.lead_captured || s.context.lead_id)).length,
+    };
+    // Ensure funnel values don't exceed started
+    funnel.language_selected = Math.min(funnel.language_selected, funnel.started);
+    res.json({ success: true, funnel });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
 module.exports = router;

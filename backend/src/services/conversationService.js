@@ -93,6 +93,14 @@ const processMessage = async (sessionId, userMessage, mobile) => {
     return responses;
   }
 
+  // Fraud keyword detection — warn but continue processing
+  if (riskCheck.isRisk || riskCheck.hasRisk) {
+    responses.push(
+      `⚠️ *Security Alert!*\n\nWe detected a potentially risky message.\n\n🔴 *Never share your:*\n• OTP / PIN / Password\n• Card number or CVV\n• Account credentials\n\nOur bank will NEVER ask for this on WhatsApp.\n\nIf you suspect fraud, call: *1800-XXX-XXXX* (toll free)`
+    );
+    // Still continue processing — don't block the session
+  }
+
   // Global commands
   const upper = msg.toUpperCase();
   if (upper === 'HI' || upper === 'HELLO' || upper === 'START' || upper === 'NAMASTE') {
@@ -396,6 +404,11 @@ const handleState = async (state, session, msg, responses = []) => {
       if (selected) {
         const info = buildProductInfo(selected.key, lang);
         responses.push(info || `Information about ${selected.name} will be provided by our RM.`);
+        if (selected.key === 'home_loan') {
+          const { formatEMIBreakdown } = require('../utils/emiCalculator');
+          const emi = formatEMIBreakdown(5000000, 8.5, 20);
+          responses.push(`🏠 *Home Loan EMI Examples* (₹50L, 20 yrs @ 8.5%):\n💰 EMI: ~₹${emi.emi.toLocaleString('en-IN')}/month\n📊 Total Interest: ~₹${(emi.totalInterest / 100000).toFixed(1)}L`);
+        }
         await SessionModel.update(session.id, {
           state: STATES.LEAD_NAME,
           context: { ...session.context, pending_product: selected.name, pending_product_key: selected.key },

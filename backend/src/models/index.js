@@ -191,6 +191,10 @@ const SessionModel = {
   delete: async (id) => {
     SessionModel.sessions.delete(id);
   },
+
+  findAll: () => {
+    return Array.from(SessionModel.sessions.values());
+  },
 };
 
 const MessageModel = {

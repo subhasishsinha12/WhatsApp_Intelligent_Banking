@@ -11,9 +11,11 @@ export default function AnalyticsPage() {
   const [leadsData, setLeadsData] = useState(null);
   const [convData, setConvData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [funnel, setFunnel] = useState(null);
 
   useEffect(() => {
     loadData();
+    analyticsAPI.getFunnel().then(r => setFunnel(r.data.funnel)).catch(() => {});
   }, []);
 
   const loadData = async () => {
@@ -143,6 +145,34 @@ export default function AnalyticsPage() {
           </LineChart>
         </ResponsiveContainer>
       </div>
+
+      {/* Conversation Funnel */}
+      {funnel && (
+        <div className="bg-white rounded-xl shadow p-6 mt-6">
+          <h2 className="text-lg font-semibold text-gray-800 mb-4">Conversation Funnel</h2>
+          {[
+            { label: 'Sessions Started', key: 'started', color: 'bg-blue-500' },
+            { label: 'Language Selected', key: 'language_selected', color: 'bg-green-500' },
+            { label: 'Authenticated', key: 'authenticated', color: 'bg-yellow-500' },
+            { label: 'Reached Menu', key: 'reached_menu', color: 'bg-orange-500' },
+            { label: 'Completed Action', key: 'completed_action', color: 'bg-red-500' },
+          ].map(step => {
+            const val = funnel[step.key] || 0;
+            const pct = funnel.started > 0 ? Math.round((val / funnel.started) * 100) : 0;
+            return (
+              <div key={step.key} className="mb-3">
+                <div className="flex justify-between text-sm mb-1">
+                  <span className="text-gray-600">{step.label}</span>
+                  <span className="font-medium">{val} ({pct}%)</span>
+                </div>
+                <div className="w-full bg-gray-100 rounded-full h-4">
+                  <div className={`${step.color} h-4 rounded-full transition-all duration-500`} style={{ width: `${pct}%` }} />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

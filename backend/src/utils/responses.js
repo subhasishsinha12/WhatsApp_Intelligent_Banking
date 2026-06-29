@@ -4,7 +4,7 @@ const MESSAGES = {
   WELCOME: {
     en: `🏦 *Welcome to WhatsApp Banking!*\n\nPlease select your preferred language:\n\n1️⃣ English\n2️⃣ हिंदी (Hindi)\n3️⃣ ગુજરાતી (Gujarati)`,
     hi: `🏦 *WhatsApp Banking में आपका स्वागत है!*\n\nकृपया अपनी भाषा चुनें:\n\n1️⃣ English\n2️⃣ हिंदी (Hindi)\n3️⃣ ગુજรાતી (Gujarati)`,
-    gu: `🏦 *WhatsApp Banking માં આપનું સ્વાગત છે!*\n\nકૃપા કરી આपकी ભાષा પસંદ કરો:\n\n1️⃣ English\n2️⃣ हिंदी (Hindi)\n3️⃣ ગુજરાતી (Gujarati)`,
+    gu: `🏦 *WhatsApp બેન્કિંગમાં આપનું સ્વાગત છે!*\n\nકૃપા કરીને આપની ભાષા પસંદ કરો:\n\n1️⃣ English\n2️⃣ हिंदी (Hindi)\n3️⃣ ગુજરાતી (Gujarati)`,
   },
 
   CUSTOMER_TYPE: {

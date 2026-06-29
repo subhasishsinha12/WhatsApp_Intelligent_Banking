@@ -37,6 +37,29 @@ router.get('/analytics', authMiddleware, async (req, res) => {
   }
 });
 
+// GET /api/leads/export — download leads as CSV
+router.get('/export', authMiddleware, async (req, res) => {
+  try {
+    const leads = await LeadModel.findAll();
+
+    const headers = ['ID','Name','Mobile','Product Interest','Urgency','Status','Assigned RM','Branch','Created At','Notes'];
+    const rows = leads.map(l => [
+      l.id, l.name, l.mobile, l.product_interest, l.urgency,
+      l.status, l.assigned_rm || '', l.branch_code || '',
+      new Date(l.created_at).toLocaleDateString('en-IN'),
+      (l.notes || '').replace(/,/g, ';')
+    ]);
+
+    const csv = [headers, ...rows].map(r => r.join(',')).join('\n');
+
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader('Content-Disposition', 'attachment; filename="leads_export.csv"');
+    res.send(csv);
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
 // GET /api/leads/:id - Get single lead
 router.get('/:id', authMiddleware, async (req, res) => {
   try {
